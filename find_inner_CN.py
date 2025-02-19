@@ -1,3 +1,4 @@
+import multiprocessing.process
 import os
 from cifkit import Cif
 import traceback
@@ -95,7 +96,7 @@ def d_by_dmin(k, v, center, site_symbol_map):
     inner_CN = None
     
     # sort
-    points_wd = sorted(points_wd, key=lambda x: x[1])
+    points_wd = sorted(points_wd, key=lambda x: x[1])[:20]
     distances = np.array([p[1] for p in points_wd])
     distances /= distances.min()
 
@@ -192,8 +193,8 @@ def run_parallel(root_dir, nmax=100):
         if not c.endswith(".cif"):
             continue
         
-        if i > nmax:
-            break
+        # if i > nmax:
+        #     break
         
         tasks.append({'cif_path': f"{root}{os.sep}{c}", 'results': results})
         
@@ -204,11 +205,15 @@ def run_parallel(root_dir, nmax=100):
     
     results = list(results)
     df = pd.DataFrame(results)
-    df[['CIF#', 'site','central_atom', 'Wyckoff', 'outer_CN', 'formula_outer_CN', 'inner_CN', 'formula_inner_CN', 'lowest_inner_CN', 'formula_lowest_inner_CN', 'distances', 'angles']].to_csv('results.csv', index=False)
+    df[['CIF#', 'site','central_atom', 'Wyckoff', 'outer_CN', 'formula_outer_CN', 'inner_CN', 'formula_inner_CN', 'lowest_inner_CN', 'formula_lowest_inner_CN', 'distances', 'angles']].to_csv('innerCN_results.csv', index=False)
             
     
     
 if __name__ == "__main__":
-    root = "/home/bala/Documents/data/not_prototype_CIFs"
+    import time
+    root = "/home/user/Documents/bala/2_CN4_in_Yb16MnSb11/data/im_full_occupancy"
     # print(find_cenvs_s(cif_path=f"{root}{os.sep}1632013.cif"))
+    t0 = time.time()
     run_parallel(root)
+    print(round(time.time()-t0, 1))
+    
