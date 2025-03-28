@@ -8,4 +8,4 @@ colors.csv contains the assigned color-group for each element. Extend this list 
 2. inner_CN/ finds the inner coordination numbers using the d/d_min method. This code can run in parallel and the output containing filename, center atom, its Wyckoff, neghbor formula will be saved as .csv file.
 <br>
 <br>
-3. linear_groups - finds the linear _M-M-M_ units made of same element.
+3. linear_groups - finds the linear *M-M-M* units made of same element.
