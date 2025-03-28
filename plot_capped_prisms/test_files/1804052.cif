@@ -1,0 +1,130 @@
+##############################################################################
+#                                                                            #
+# Ge-Te-Ti         # TiGeTe6                                       # 1804052 #
+#                                                                            #
+##############################################################################
+#                                                                            #
+#                           Pearson's Crystal Data                           #
+#      Crystal Structure Database for Inorganic Compounds (on DVD)           #
+#                              Release 2024/25                               #
+#      Editors: Pierre Villars, Karin Cenzual, and Vitaliy Dubenskyy         #
+#                                                                            #
+#   Copyright (c) ASM International & Material Phases Data System (MPDS),    #
+# Switzerland & National Institute for Materials Science (NIMS), Japan, 2024 #
+#                   All rights reserved. Version 2024.07                     #
+#                                                                            #
+#   This copy of Pearson's Crystal Data is licensed to:                      #
+#   Hunter College - City University of New York                             #
+#                                                                            #
+##############################################################################
+
+data_1804052
+_audit_creation_date                     2024-10-07
+_audit_creation_method
+;
+Pearson's Crystal Data browser
+;
+#_database_code_PCD                      1804052
+_database_code_PDF                       04-010-1213
+
+# Entry summary
+
+_chemical_formula_structural             'Ti Ge Te~6~'
+_chemical_formula_sum                    'Ge Te6 Ti'
+_chemical_name_mineral                   ?
+_chemical_compound_source                ?
+_chemical_name_structure_type            TiGeTe~6~,mS32,12
+_chemical_formula_weight                 886.1
+
+# Bibliographic data
+
+_publ_section_title
+;
+The Layered Ternary Germanium Tellurides ZrGeTe~4~, HfGeTe~4~, and TiGeTe~6~: Structure, Bonding, and Physical Properties
+;
+_journal_coden_ASTM                      JACSAT
+_journal_name_full                       'J. Am. Chem. Soc.'
+_journal_year                            1993
+_journal_volume                          115
+_journal_page_first                      3227
+_journal_page_last                       3238
+_journal_language                        English
+loop_
+ _publ_author_name
+ _publ_author_address
+''
+;
+;
+
+# Standardized crystallographic data
+
+_cell_length_a                           13.972
+_cell_length_b                           3.909
+_cell_length_c                           17.454
+_cell_angle_alpha                        90
+_cell_angle_beta                         104.95
+_cell_angle_gamma                        90
+_cell_volume                             921
+_cell_formula_units_Z                    4
+_space_group_IT_number                   12
+_space_group_name_H-M_alt                'C 1 2/m 1'
+loop_
+ _space_group_symop_id
+ _space_group_symop_operation_xyz
+ 1 'x, y, z'
+ 2 '-x, -y, -z'
+ 3 '-x, y, -z'
+ 4 'x, -y, z'
+ 5 '1/2+x, 1/2+y, z'
+ 6 '1/2-x, 1/2-y, -z'
+ 7 '1/2-x, 1/2+y, -z'
+ 8 '1/2+x, 1/2-y, z'
+loop_
+ _atom_type_symbol
+ Te
+ Ge
+ Ti
+loop_
+ _atom_site_label
+ _atom_site_type_symbol
+ _atom_site_symmetry_multiplicity
+ _atom_site_Wyckoff_symbol
+ _atom_site_fract_x
+ _atom_site_fract_y
+ _atom_site_fract_z
+ _atom_site_occupancy
+ Te(1) Te 4 i 0.08321 0 0.25398 1
+ Te(2) Te 4 i 0.12288 0 0.4644 1
+ Te(3) Te 4 i 0.15309 0 0.01542 1
+ Ge Ge 4 i 0.2807 0 0.59393 1
+ Te(4) Te 4 i 0.31975 0 0.17835 1
+ Te(5) Te 4 i 0.37422 0 0.34513 1
+ Te(6) Te 4 i 0.58733 0 0.11361 1
+ Ti Ti 4 i 0.73569 0 0.25818 1
+
+
+_exptl_crystal_colour                    black
+_exptl_crystal_density_meas              ?
+_exptl_crystal_density_diffrn            6.39
+_cell_measurement_temperature            113
+_cell_measurement_radiation              'X-rays, Mo Ka1'
+_cell_measurement_wavelength             0.7093
+_cell_measurement_reflns_used            28
+_diffrn_ambient_temperature              113
+_diffrn_measurement_device               'automatic diffractometer'
+_diffrn_measurement_device_type          Picker
+_diffrn_radiation_type                   'X-rays, Mo Ka1'
+_diffrn_radiation_wavelength             0.7093
+_diffrn_reflns_number                    3600
+_diffrn_reflns_theta_min                 1
+_diffrn_reflns_theta_max                 26
+_exptl_absorpt_coefficient_mu            22.69
+_exptl_absorpt_correction_type           ?
+_computing_structure_solution            'direct methods, Fourier synthesis'
+_refine_ls_number_parameters             ?
+_refine_ls_number_reflns                 501
+_refine_ls_R_factor_gt                   0.041
+_refine_ls_wR_factor_gt                  ?
+
+# End of data set 1804052
+

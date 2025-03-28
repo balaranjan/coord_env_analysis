@@ -1,19 +1,18 @@
-from cifkit import Cif
-from matplotlib import pyplot as plt
-import pandas as pd
-import numpy as np
-import traceback
-from cifkit.utils import unit
-from scipy.spatial import ConvexHull
-from collections import defaultdict
 import os
-import re
-import time
-
+import traceback
+import numpy as np
+import pandas as pd
+from cifkit import Cif
+from cifkit.utils import unit
+from collections import defaultdict
+from scipy.spatial import ConvexHull
+from matplotlib import pyplot as plt
 from cif_parser import _parse_formula, cif_to_dict
 
 
 def CN_numbers_of_site(v):
+    
+    # Finds the coordination numbers using the d/d_min method.
     
     points_wd =[[p[3], p[1], p[0]] for p in v]
     
@@ -27,6 +26,7 @@ def CN_numbers_of_site(v):
     
     CN_values = np.array(ind_gaps[::-1]) + 1
     CN_values = CN_values[CN_values >= 4]
+    
     return CN_values
 
 
@@ -41,6 +41,15 @@ def point_in_hull(poly, point):
 
 
 def has_capped_atom(face_points, face_indices, capping_atoms, non_layer_axes):
+    
+    """
+    This checks for the presence of capping atoms by checking for atoms outside of 
+    the plane created by extending the face of the prisms.  When more than one 
+    capping atoms are found, only atoms forming an angle greater than 45 degrees
+    are considered as capping atoms.
+    
+    If all faces of the prism has capping, returns true.
+    """
 
     face_points = np.array([face_points[i] for i in face_indices])
     
@@ -98,7 +107,8 @@ def has_capped_atom(face_points, face_indices, capping_atoms, non_layer_axes):
 def get_capped_prism_data(site, layer_axis, points_wd, CN):
     
     """
-    Check for the presence of capped prisms
+    Check for the presence of capped prisms and return the 
+    coordinates.
     """
 
     num_capping_atoms = int(len(points_wd) / 3)
@@ -221,6 +231,9 @@ def get_capped_prism_data(site, layer_axis, points_wd, CN):
 
 
 def get_formula(points_wd, site_symbol_map):
+    
+    # Create formula for the prism and capping sites.
+    
     symbols = [s[0] for s in points_wd]
     site_elements = defaultdict(int)
     for s in symbols:
@@ -236,6 +249,8 @@ def get_formula(points_wd, site_symbol_map):
         
 
 def get_data(cif_path, CN):
+    
+    # get capped prisms data for the cif.
     
     cif = Cif(cif_path)
     cif_d = cif_to_dict(cif_path)
@@ -293,17 +308,18 @@ def get_data(cif_path, CN):
 
 def get_colors(site_symbol_map):
     
-    colors = pd.read_csv('/home/bala/Documents/12_all_in_one/colors.csv')
+    colors = pd.read_csv('colors.csv')
     color_labels = dict(zip(colors['Element'].tolist(), colors['Color'].tolist()))
     
     reds = ['red', 'firebrick', 'darkred', 'orangered', 'crimson']
     blues = ['blue', 'darkblue', 'dodgerblue', 'royalblue', 'skyblue']
     greys = ['dimgrey', 'darkgrey', 'grey', 'silver', 'slategrey']
-    lightgrey = ['violet', 'darkviolet', 'magenta', 'purple', 'orchid']
+    pink = ['violet', 'darkviolet', 'magenta', 'purple', 'orchid']
     
     cpd_elements = list(set(list(site_symbol_map.values())))
     ir, ib, ig, iv = 0, 0, 0, 0
     cpd_colors = {}
+    
     for el in cpd_elements:
         cl = color_labels[el]
 
@@ -316,11 +332,11 @@ def get_colors(site_symbol_map):
         elif cl == "grey":
             cpd_colors[el] = greys[ig]
             ig += 1
-        elif cl == "lightgrey":
-            cpd_colors[el] = lightgrey[ig]
+        elif cl == "pink":
+            cpd_colors[el] = pink[ig]
             iv += 1
         else:
-            print("COLOR ERROR", el)
+            print("COLOR ERROR", el, cl)
             
     return cpd_colors
 
@@ -344,8 +360,8 @@ def get_first_n_neighbors(point, supercell_points, n):
 
 
 def format_formula(formula):
-    formula = _parse_formula(formula)
     
+    formula = _parse_formula(formula)
     new_formula = ""
     for k, v in formula.items():
         if v == 1.0:
@@ -367,7 +383,7 @@ def get_sg_symbol(cif_path):
            'P1m1': 'Pm', 'P63/m': 'P6_3/m', 'Cmc21': 'Cmc2_1', 
            'C1m1': 'Cm', 'C2221': 'C222_1', 'P21212': 'P2_12_12'}
     
-    with open('/home/bala/Documents/15_capped_prisms_individual/sgs.csv', 'r') as f:
+    with open('sgs.csv', 'r') as f:
         for line in f.readlines()[1:]:
             k, v = line.split(',')
             if k not in sgs:
@@ -396,12 +412,20 @@ def get_sg_symbol(cif_path):
         return formatted_sg_symbol
 
 
-def plot_supercell(cif_path, title, CNs, ms=10, fix_min_length=None, flip_layers=False, sites_to_plot=None):
-    lw = 1
+def plot_supercell(cif_path, CNs, ms, lw, label=False, fix_min_length=None, flip_layers=False, sites_to_plot=None, multiple=False):
+    
+    # plot the capped prisms in a 3x3 super cell
+    if lw is None:
+        lw = 1
+        
+    if sites_to_plot is not None:
+        sites_to_plot = sites_to_plot.split()
+    
     any_CN_plotted = False
     cn_color = {9: 'tab:red', 12: 'tab:green', 15: 'tab:blue', 18: 'tab:purple', 21: 'tab:orange'}
     
     cif_data = get_data(cif_path, CN=CNs[0])
+    title = cif_data['Structure Type']
     layer_axis = cif_data['layer_axis']
     layer_vals = cif_data['layer_vals']
     non_layer_axes = cif_data['non_layer_axes']
@@ -419,11 +443,11 @@ def plot_supercell(cif_path, title, CNs, ms=10, fix_min_length=None, flip_layers
         non_layer_lengths /= non_layer_lengths.min()
         non_layer_lengths *= fix_min_length
 
-        ms = max(5, int(316.27*num_supercell_atoms**(-0.596)))
-        # ms = 50
-        print(non_layer_lengths, num_supercell_atoms, ms)
+        if ms is None:
+            ms = max(5, int(316.27*num_supercell_atoms**(-0.596)))
+    else:
+        ms = 20
     
-    # plt.figure(figsize=non_layer_lengths)
     fig = plt.figure()
     fig.set_size_inches(non_layer_lengths)
     ax = plt.gca()
@@ -447,11 +471,10 @@ def plot_supercell(cif_path, title, CNs, ms=10, fix_min_length=None, flip_layers
                                                 unitcell_angles)
             supercell_points[i] = [np.array(cart), s]
 
-        supercell_layer_heights = list(set([round(float(p[0][layer_axis]), 3) for p in supercell_points]))
-        supercell_layer_heights = [round(v, 2) for v in supercell_layer_heights]
-        supercell_layer_heights = sorted(list(set([round(v, 1) for v in supercell_layer_heights])))
+        supercell_layer_heights = list(set([sround(float(p[0][layer_axis])) for p in supercell_points]))
+        supercell_layer_heights = sorted(list(set(supercell_layer_heights)))
         
-        assert len(supercell_layer_heights) == 6, f"Super cell heights !=6, {supercell_layer_heights}"
+        assert len(supercell_layer_heights) == 6, f"Number of super cell heights != 6, {supercell_layer_heights}"
         
         supercell_layer_height_map = {supercell_layer_heights[i]: i % 2 for i in range(6)}
         
@@ -492,8 +515,7 @@ def plot_supercell(cif_path, title, CNs, ms=10, fix_min_length=None, flip_layers
                     caps = atom_capped_prims_data['caps']
                     edges = atom_capped_prims_data['edges']
                     
-                    key = round(round(float(atom[0][layer_axis]), 3), 2)
-                    key = round(key, 1)
+                    key = sround(float(atom[0][layer_axis]))
                     key = supercell_layer_height_map[key]
                     capped_prism_data_by_layers[key].append([center_coordinate, prism, edges, caps])
 
@@ -610,10 +632,10 @@ def plot_supercell(cif_path, title, CNs, ms=10, fix_min_length=None, flip_layers
         x1 = unitcell_lengths[1] * np.cos(unitcell_angles[layer_axis])
         y1 = unitcell_lengths[1] * np.sin(unitcell_angles[layer_axis])
         
-        plt.plot([0., unitcell_lengths[0]], [0., 0.], c='k', alpha=0.5)
-        plt.plot([0., x1], [0., y1], c='k', alpha=0.5)
-        plt.plot([x1, x1+unitcell_lengths[0]], [y1, y1], c='k', alpha=0.5)
-        plt.plot([unitcell_lengths[0], x1+unitcell_lengths[0]], [0., y1], c='k', alpha=0.5)
+        plt.plot([0., unitcell_lengths[0]], [0., 0.], c='k', alpha=0.5, lw=lw)
+        plt.plot([0., x1], [0., y1], c='k', alpha=0.5, lw=lw)
+        plt.plot([x1, x1+unitcell_lengths[0]], [y1, y1], c='k', alpha=0.5, lw=lw)
+        plt.plot([unitcell_lengths[0], x1+unitcell_lengths[0]], [0., y1], c='k', alpha=0.5, lw=lw)
 
         legends = []
         layer_heights = sorted(supercell_layer_heights[2:4])
@@ -644,78 +666,129 @@ def plot_supercell(cif_path, title, CNs, ms=10, fix_min_length=None, flip_layers
             else:
                 plt.scatter(p[0], p[1], c=element_colors[sy], s=size, marker=m)
                 
-            if not sites_to_plot:
+            if label:
                 plt.text(p[0]-(p[0]*0.025), p[1]-(p[1]*0.035), s, size=6)
         
         assert set(legends) == set(site_symbol_map.values()), f"{set(legends)}"
         bby, ymax, ymin, xmax, xmin = get_bbox_y(supercell_points_tl, non_layer_axes, fix_min_length)
         plt.ylim(ymin, ymax)
         plt.xlim(xmin, xmax)
-        # print(bby)
+
         plt.legend(ncol=len(legends),  bbox_to_anchor=(0.5, bby), framealpha=0, loc="lower center", fontsize=16, columnspacing=0.1)
-        plt.title(format_formula(title.split(',')[0].replace("~", "")) + "-type " + get_sg_symbol(cif_path), y=1.00, size=16)
+        plt.title(format_formula(title.split(',')[0].replace("~", "")) + "-type " + get_sg_symbol(cif_path), y=1.01, size=16)
         plt.axis('off')
         plt.tight_layout()
         
-        plt.savefig(f"images/{title.replace(',', '-')} {cif_path.split(os.sep)[-1][:-4]}.png", dpi=300, transparent=True, bbox_inches='tight')
-        # plt.savefig(f"images/{title.replace(',', '-')} {cif_path.split(os.sep)[-1][:-4]}.svg", dpi=300, transparent=True)
+        if multiple:
+            plt.savefig(f"output_images/{title.replace(',', '-')} {cif_path.split(os.sep)[-1][:-4]}.png", dpi=300, transparent=True, bbox_inches='tight')
+        else:
+            plt.savefig(f"{title.replace(',', '-')} {cif_path.split(os.sep)[-1][:-4]}.png", dpi=300, transparent=True, bbox_inches='tight')
+
         return True
     return False
 
 
 def sround(val):
+    
     val = round(val, 3)
     val = round(val, 2)
     val = round(val, 1)
     
     return val
-    
+
+
 def get_bbox_y(supercell_points, non_layer_axes, fix_min_length=None):
     
     points = np.vstack([p[0][non_layer_axes] for p in supercell_points])
-    
     height = points[:, 1].max() - points[:, 1].min()
-    width = points[:, 0].max() - points[:, 0].min()
-    
-    # non_layer_axes /= non_layer_axes.min()
     
     if fix_min_length:
-        percent = 3 / height
-        if width/height > 1.8:
-            percent += 0.03
         percent = 0.1
         return -percent, points[:, 1].max()+0.5, points[:, 1].min()-0.5, points[:, 0].max()+0.5, points[:, 0].min()-0.5
     
     percent = 1 / height
     return -percent, points[:, 1].max()+1, points[:, 1].min()-1, points[:, 0].max()+1, points[:, 0].min()-1
-        
+
+
 if __name__ == "__main__":
-    import sys
-    root = "/home/bala/Documents/data/not_prototype_CIFs/"
-    import ast
-    # CaCu5,hP6,191
-    title, cname = sys.argv[1:3]
+    # root = "/home/bala/Documents/data/not_prototype_CIFs/"
     
-    flip = False
-    if len(sys.argv) >= 4:
-        flip = sys.argv[3] == 'y'
+    import argparse
     
-    sites_to_plot = None
-    if len(sys.argv) >= 5:
-        sites_to_plot = sys.argv[4].split(',')
+    parser = argparse.ArgumentParser(
+        prog=__file__.split(os.sep)[-1],
+        description="Script to plot capped-prisms in bi-layered compounds.",
+        epilog="Output images will be (over)written inside images folder in the current directory. \
+                CIFs encountering errors will be written to errors.txt")
     
-    title = title.replace("-", ",")
-    cname += ".cif"
-    m = plot_supercell(cif_path=f"{root}{cname}", 
-                title=title,
-                CNs=[12, 9],
-                ms=100,
-                fix_min_length=6,
-                flip_layers=flip,
-                sites_to_plot=sites_to_plot)
-    print(m)
+    parser.add_argument('path', help="path to CIF or folder containing multiple CIFs")
+    parser.add_argument('-p', '--prisms', help="set the numbers for prisms \
+                        (3 for trigonal, 4 for square, 5 for pentagonal, etc.) eg. 3,4 (default)", 
+                        type=str, metavar='')
+    parser.add_argument('-f', '--fix_length', help="fix the length of shortest side", type=float, metavar='')
+    parser.add_argument('-m', '--marker_size', help="set marker size eg. 1", type=int, metavar='')
+    parser.add_argument('-w', '--line_width', help="set line width eg. 3.0", type=int, metavar='')
+    parser.add_argument('-s', '--sites', help="select sites to plot eg. Si1 Al1", type=str, metavar='')
+    parser.add_argument('-i', '--invert', action='store_true', help="invert the layers")
+    parser.add_argument('-l', '--label', action='store_true', help="label the sites")
+    
+    args = parser.parse_args()
+    print(f"file: {args.path}, invert {args.invert}, side_length {args.fix_length}, marker_size {args.marker_size} \
+        line_width {args.line_width} sites {args.sites} cns {args.prisms}")  
+    
+    if not os.path.isdir("output_images"):
+        os.mkdir("output_images")
+    
+    if args.prisms is not None:
+        try:
+            cns = [int(c)*3 for c in args.prisms.split(',')]
+        except:
+            print(f"Invalid value for prisms. \nEnter intergers from 3-7, separated by comma. e.g. 3,5")
+            exit(0)
+    else:
+        cns = [9, 12]
+    cns = sorted(cns, reverse=True)
+    if os.path.isfile(args.path) and args.path.endswith('cif'):
+        plot_supercell(cif_path=args.path, 
+                        CNs=cns,
+                        flip_layers=args.invert,
+                        label=args.label,
+                        fix_min_length=args.fix_length,
+                        ms=args.marker_size,
+                        lw=args.line_width,
+                        sites_to_plot=args.sites,
+                        multiple=False)
+    
+    elif os.path.isdir(args.path):
+        cifs = [os.path.join(args.path, f) for f in os.listdir(args.path) if f.endswith('.cif')]
+        print(cifs)
+        total = len(cifs)
+        errors = []
+        
+        for i, cif in enumerate(cifs, 1):
+            print(f"{i} of {total}:  {cif}")
+            try:
+                success = plot_supercell(cif_path=cif, 
+                                CNs=cns,
+                                flip_layers=args.invert,
+                                label=args.label,
+                                fix_min_length=args.fix_length,
+                                ms=args.marker_size,
+                                lw=args.line_width,
+                                sites_to_plot=args.sites,
+                                multiple=True)
+                if not success:
+                    errors.append(cif)
+            except:
+                errors.append(cif)
+                print(traceback.format_exc())
+                
+        with open('output_images/errors.txt', 'w') as f:
+            for e in errors:
+                f.write(f"{e}\n")
+    else:
+        print("Unknown option for path", args.path)
     exit(0)
-    
     
     
     # porder = {'complete structure determined': 1,

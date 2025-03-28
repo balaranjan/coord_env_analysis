@@ -1,0 +1,139 @@
+##############################################################################
+#                                                                            #
+# Cu-Mg-Y          # Mg4CuY                                        # 1629135 #
+#                                                                            #
+##############################################################################
+#                                                                            #
+#                           Pearson's Crystal Data                           #
+#      Crystal Structure Database for Inorganic Compounds (on DVD)           #
+#                              Release 2024/25                               #
+#      Editors: Pierre Villars, Karin Cenzual, and Vitaliy Dubenskyy         #
+#                                                                            #
+#   Copyright (c) ASM International & Material Phases Data System (MPDS),    #
+# Switzerland & National Institute for Materials Science (NIMS), Japan, 2024 #
+#                   All rights reserved. Version 2024.07                     #
+#                                                                            #
+#   This copy of Pearson's Crystal Data is licensed to:                      #
+#   Hunter College - City University of New York                             #
+#                                                                            #
+##############################################################################
+
+data_1629135
+_audit_creation_date                     2024-10-04
+_audit_creation_method
+;
+Pearson's Crystal Data browser
+;
+#_database_code_PCD                      1629135
+_database_code_PDF                       04-017-2231
+
+# Entry summary
+
+_chemical_formula_structural             'Mg~4~ Cu Y'
+_chemical_formula_sum                    'Cu Mg4 Y'
+_chemical_name_mineral                   ?
+_chemical_compound_source                ?
+_chemical_name_structure_type            Mg~4~CuTb,oS48,65
+_chemical_formula_weight                 249.7
+
+# Bibliographic data
+
+_publ_section_title
+;
+Inhomogeneous 2D linear intergrowth structures among novel Y-Cu-Mg ternary compounds with yttrium/copper equiatomic ratio
+;
+_journal_coden_ASTM                      SSSCFJ
+_journal_name_full                       'Solid State Sci.'
+_journal_year                            2009
+_journal_volume                          11
+_journal_page_first                      801
+_journal_page_last                       811
+_journal_language                        English
+loop_
+ _publ_author_name
+ _publ_author_address
+''
+;
+;
+
+# Standardized crystallographic data
+
+_cell_length_a                           13.5754
+_cell_length_b                           20.3153
+_cell_length_c                           3.906
+_cell_angle_alpha                        90
+_cell_angle_beta                         90
+_cell_angle_gamma                        90
+_cell_volume                             1077.2
+_cell_formula_units_Z                    8
+_space_group_IT_number                   65
+_space_group_name_H-M_alt                'C m m m'
+loop_
+ _space_group_symop_id
+ _space_group_symop_operation_xyz
+ 1 'x, y, z'
+ 2 '-x, -y, -z'
+ 3 '-x, -y, z'
+ 4 '-x, y, -z'
+ 5 '-x, y, z'
+ 6 'x, -y, -z'
+ 7 'x, -y, z'
+ 8 'x, y, -z'
+ 9 '1/2+x, 1/2+y, z'
+ 10 '1/2-x, 1/2-y, -z'
+ 11 '1/2-x, 1/2-y, z'
+ 12 '1/2-x, 1/2+y, -z'
+ 13 '1/2-x, 1/2+y, z'
+ 14 '1/2+x, 1/2-y, -z'
+ 15 '1/2+x, 1/2-y, z'
+ 16 '1/2+x, 1/2+y, -z'
+loop_
+ _atom_type_symbol
+ Mg
+ Cu
+ Y
+loop_
+ _atom_site_label
+ _atom_site_type_symbol
+ _atom_site_symmetry_multiplicity
+ _atom_site_Wyckoff_symbol
+ _atom_site_fract_x
+ _atom_site_fract_y
+ _atom_site_fract_z
+ _atom_site_occupancy
+ Mg1 Mg 8 q 0.11806 0.25603 0.5 1
+ Mg5 Mg 8 q 0.13243 0.07945 0.5 1
+ Cu1 Cu 8 q 0.34089 0.10511 0.5 1
+ Mg4 Mg 8 p 0.24549 0.16855 0 1
+ Mg6 Mg 4 i 0 0.16481 0 1
+ Y1 Y 4 i 0 0.3675 0 1
+ Y2 Y 4 g 0.30162 0 0 1
+ Mg3 Mg 2 c 0.5 0 0.5 1
+ Mg2 Mg 2 a 0 0 0 1
+
+
+_exptl_crystal_colour                    ?
+_exptl_crystal_density_meas              ?
+_exptl_crystal_density_diffrn            3.08
+_cell_measurement_temperature            ?
+_cell_measurement_radiation              'X-rays, Mo Ka'
+_cell_measurement_wavelength             0.71073
+_cell_measurement_reflns_used            ?
+_diffrn_ambient_temperature              ?
+_diffrn_measurement_device               'automatic diffractometer'
+_diffrn_measurement_device_type          'Oxford Diffraction Xcalibur'
+_diffrn_radiation_type                   'X-rays, Mo Ka'
+_diffrn_radiation_wavelength             0.71073
+_diffrn_reflns_number                    3478
+_diffrn_reflns_theta_min                 3
+_diffrn_reflns_theta_max                 26.3
+_exptl_absorpt_coefficient_mu            15.0
+_exptl_absorpt_correction_type           analytical
+_computing_structure_solution            'direct methods, Fourier synthesis'
+_refine_ls_number_parameters             45
+_refine_ls_number_reflns                 592
+_refine_ls_R_factor_gt                   0.0180
+_refine_ls_wR_factor_gt                  0.0352
+
+# End of data set 1629135
+
