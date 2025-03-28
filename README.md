@@ -5,6 +5,7 @@ This repository contains scripts to find coordination environments of interest. 
 sgs.csv contains the Hermann–Mauguin notation and their latex formatting. Extend this list as required.
 colors.csv contains the assigned color-group for each element. Extend this list as required.
 <br>
+
 ```
 $:~/16_plot_custom$ python overlay_plot_capped_prisms.py -h
 usage: overlay_plot_capped_prisms.py [-h] [-p] [-f] [-m] [-w] [-s] [-i] [-l] path
@@ -24,7 +25,8 @@ options:
   -i, --invert         invert the layers
   -l, --label          label the sites
 
-Output images will be (over)written inside images folder in the current directory. CIFs encountering errors will be written to errors.txt```
+Output images will be (over)written inside images folder in the current directory. CIFs encountering errors will be written to errors.txt
+```
 <br>
 2. inner_CN/ finds the inner coordination numbers using the d/d_min method. This code can run in parallel and the output containing filename, center atom, its Wyckoff, neghbor formula will be saved as .csv file.
 <br>
